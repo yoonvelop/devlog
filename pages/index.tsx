@@ -1,9 +1,17 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
+import { getDatabaseItems } from "../cms/notion";
 import PageHead from "../components/common/PageHead";
 import styles from "../styles/Home.module.css";
+import { CardData } from "../types/types";
+import { parseDatabaseItems } from "../utils/parseDatabaseItems";
 
-const Home: NextPage = () => {
+interface HomeProps {
+  data: CardData[];
+}
+
+const Home = ({ data }: HomeProps) => {
+  console.log(data);
   return (
     <>
       <PageHead />
@@ -72,3 +80,19 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const databaseId = process.env.DATABASE_ID;
+
+  // static 페이지에서는 throw new Error시 이전 버전의 페이지를 보여줌
+  if (!databaseId) throw new Error("DATABASE_ID is not defined");
+
+  const databaseItems = await getDatabaseItems(databaseId);
+  const parsedData = parseDatabaseItems(databaseItems);
+
+  return {
+    props: {
+      data: parsedData,
+    },
+  };
+};
