@@ -1,3 +1,5 @@
+// 오픈그래프 이미지를 동적으로 생성
+
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 
@@ -13,7 +15,7 @@ const handler = async (req: NextRequest) => {
     const hasTitle = searchParams.has("title");
     const title = hasTitle
       ? searchParams.get("title")?.slice(0, 100)
-      : "Notion Devlog";
+      : "yoonvelop DEVLOG";
 
     return new ImageResponse(
       (
